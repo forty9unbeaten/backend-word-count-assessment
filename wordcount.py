@@ -41,21 +41,50 @@ print_words() and print_top().
 
 import sys
 
-# +++your code here+++
-# Define print_words(filename) and print_top(filename) functions.
-# You could write a helper utility function that reads a file
-# and builds and returns a word/count dict for it.
-# Then print_words() and print_top() can just call the utility function.
 
-###
+def print_words(filename):
+    with open(filename, 'r') as f:
+        fileText = f.read().split()
+        wordCounts = {}
 
-# This basic command line argument parsing code is provided and
-# calls the print_words() and print_top() functions which you must define.
+        for word in fileText:
+            if word.lower() in wordCounts:
+                wordCounts[word.lower()] += 1
+            else:
+                wordCounts[word.lower()] = 1
+
+        alphaKeys = sorted(wordCounts.keys())
+        for key in alphaKeys:
+            print(key + ': ' + str(wordCounts[key]))
+
+
+def print_top(filename):
+    with open(filename, 'r') as f:
+        fileText = f.read().split()
+        wordCounts = {}
+
+        for word in fileText:
+            if word.lower() in wordCounts:
+                wordCounts[word.lower()] += 1
+            else:
+                wordCounts[word.lower()] = 1
+
+        # sort word counts by making each key/value pair a tuple
+        # and sorting by the [1] value i.e. the number of times
+        # the word occurs
+        sortedCounts = sorted(wordCounts.items(),
+                              reverse=True, key=lambda x: x[1])
+
+        # print top 20 word counts
+        for i in range(0, 20):
+            print(str(i + 1) + ' *** ' +
+                  sortedCounts[i][0] + ': ' + str(sortedCounts[i][1]))
 
 
 def main():
+
     if len(sys.argv) != 3:
-        print 'usage: python wordcount.py {--count | --topcount} file'
+        print('usage: python wordcount.py {--count | --topcount} file')
         sys.exit(1)
 
     option = sys.argv[1]
@@ -65,7 +94,7 @@ def main():
     elif option == '--topcount':
         print_top(filename)
     else:
-        print 'unknown option: ' + option
+        print('unknown option: ' + option)
         sys.exit(1)
 
 
